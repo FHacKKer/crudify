@@ -29,7 +29,7 @@ type errorResponse = {
 
 type ServerResponse = successResponse | errorResponse
 
-export default function Login() {
+export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const [formData, setFormData] = useState<FormData>({
@@ -40,6 +40,10 @@ export default function Login() {
 
     const validateForm = (): boolean => {
         const newErrors: Partial<FormData> = {}
+
+        if(!formData.login) {
+            newErrors.login = 'Email or Username is required'
+        }
 
         if (!formData.password) {
             newErrors.password = 'Password is required'
@@ -179,6 +183,10 @@ export default function Login() {
                             {isLoading ? 'Signing in...' : 'Sign in'}
                         </Button>
                     </form>
+                    <div className="flex items-center justify-between mt-2">
+                        <p>Don't have an Account</p>
+                        <Link to={"/register"} className={`underline`}>Sign up Now</Link>
+                    </div>
                 </CardContent>
             </Card>
         </div>
