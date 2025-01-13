@@ -1,9 +1,9 @@
-import Login from "@/features/auth/login.tsx";
+import LoginPage from "@/features/auth/login-page.tsx";
 
-function LoginPage() {
+function Login() {
     return (
-        <Login />
+        <LoginPage />
     );
 }
 
-export default LoginPage;
+export default Login;
