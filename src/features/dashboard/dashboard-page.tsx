@@ -7,6 +7,11 @@ import {Button } from "@/components/ui/button";
 import {Plus} from "lucide-react";
 import {AddUserDialog} from "@/components/dashboard-components/add-user-dialog.tsx";
 import {RoleRequestDialog} from "@/components/dashboard-components/role-request-dialog.tsx";
+import {AuthRequiredDialog} from "@/components/dashboard-components/auth-required-role.tsx";
+
+interface DashboardPageProps {
+    isAuthenticated: boolean;
+}
 
 // Sample data - replace with your actual data fetching logic
 const sampleUsers: User[] = [
@@ -30,7 +35,7 @@ const sampleUsers: User[] = [
     }
 ]
 
-const DashboardPage = () => {
+const DashboardPage = ({isAuthenticated}:DashboardPageProps) => {
 
     const user:User = {
         name:"Faisal Shahzad",
@@ -110,7 +115,8 @@ const DashboardPage = () => {
     }
 
     return (
-        <div className="container mx-auto py-10 px-4">
+        <>
+        <div className={`container mx-auto py-10 px-4 ${!isAuthenticated ? 'pointer-events-none select-none blur-sm' : ''}`}>
             <div className="mb-8 space-y-4">
                 <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold">User Management</h1>
@@ -148,6 +154,9 @@ const DashboardPage = () => {
                 }}
             />
         </div>
+
+           <AuthRequiredDialog isOpen={!isAuthenticated} />
+        </>
     );
 };
 

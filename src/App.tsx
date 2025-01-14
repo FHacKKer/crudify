@@ -1,10 +1,12 @@
 import './App.css'
 import DashboardPage from "@/features/dashboard/dashboard-page.tsx";
+import {useAppContext} from "@/context/AppContex.tsx";
 
 function App() {
-  return (
-    <DashboardPage />
-  )
+
+  const { isLoggedIn } = useAppContext()
+
+  return ( <DashboardPage isAuthenticated={isLoggedIn} /> )
 }
 
 export default App
