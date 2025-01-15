@@ -76,3 +76,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+.Toastify__toast-container,.Toastify__toast {
+  font-family: "Afacad Flux", serif !important;
+  font-optical-sizing: auto;
+  font-weight: 200;
+  font-style: normal;
+  font-variation-settings:
+          "slnt" 0;
+}

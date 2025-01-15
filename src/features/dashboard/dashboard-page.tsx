@@ -8,6 +8,7 @@ import {Plus} from "lucide-react";
 import {AddUserDialog} from "@/components/dashboard-components/add-user-dialog.tsx";
 import {RoleRequestDialog} from "@/components/dashboard-components/role-request-dialog.tsx";
 import {AuthRequiredDialog} from "@/components/dashboard-components/auth-required-role.tsx";
+import {useAppContext} from "@/context/AppContex.tsx";
 
 interface DashboardPageProps {
     isAuthenticated: boolean;
@@ -47,6 +48,8 @@ const DashboardPage = ({isAuthenticated}:DashboardPageProps) => {
         isActive:true
     }
 
+    const {showToast} = useAppContext()
+
     const [users, setUsers] = useState<User[]>(sampleUsers)
     const [filteredUsers, setFilteredUsers] = useState<User[]>(sampleUsers)
     const [showRoleDialog, setShowRoleDialog] = useState(false)
@@ -65,7 +68,7 @@ const DashboardPage = ({isAuthenticated}:DashboardPageProps) => {
 
     const handleBulkDelete = () => {
         if (!hasAdminPrivileges()) {
-            // Handle insufficient permissions
+            showToast({message:`You are not authorized`, type:"warning"})
             return
         }
         // Handle bulk delete
@@ -129,7 +132,7 @@ const DashboardPage = ({isAuthenticated}:DashboardPageProps) => {
                         <FilterBar onFilterChange={handleFilter}/>
                     </div>
                     <BulkActions
-                        selectedCount={0}
+                        selectedCount={1}
                         onDelete={handleBulkDelete}
                         onActivate={handleBulkActivate}
                         onDeactivate={handleBulkDeactivate}
