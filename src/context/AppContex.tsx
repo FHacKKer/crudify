@@ -7,6 +7,8 @@ type ContextProviderProps = {
 interface AppContextProps {
     isLoggedIn:boolean;
     setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+    accessToken:string | null;
+    setAccessToken: Dispatch<SetStateAction<string | null>>;
 }
 
 const AppContext = createContext<AppContextProps | null>(null)
@@ -14,11 +16,14 @@ const AppContext = createContext<AppContextProps | null>(null)
 
 export const ContextProvider = ({ children }: ContextProviderProps) => {
 
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+    const [accessToken, setAccessToken] = useState<string | null>(null)
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!accessToken)
 
     const ContextProviderValue:AppContextProps = {
         isLoggedIn,
-        setIsLoggedIn
+        setIsLoggedIn,
+        accessToken,
+        setAccessToken
     };
 
     return (

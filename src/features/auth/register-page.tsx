@@ -8,7 +8,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import api from "@/services/api.ts";
+import {AxiosResponse} from "axios";
 
 interface FormData {
     name: string
@@ -17,9 +19,17 @@ interface FormData {
     password: string
 }
 
+interface ServerResponse {
+    success: boolean
+    message: string
+}
+
 type FormErrors = Partial<FormData>
 
 export default function RegisterPage() {
+
+    const navigate = useNavigate()
+
     const [isLoading, setIsLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const [emailAliasWarning, setEmailAliasWarning] = useState(false)
@@ -84,16 +94,20 @@ export default function RegisterPage() {
         setIsLoading(true)
 
         try {
-            // Log the user object after successful validation
-            console.log('User registration data:', {
+            const {data}:AxiosResponse<ServerResponse> = await api.post("/api/v1/auth/signup", {
                 name: formData.name,
                 username: formData.username,
                 email: formData.email,
-                password: '********' // Masked for security
-            })
+                password: formData.password
+            });
 
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500))
+            if(data.success) {
+                navigate("/login");
+                return
+            }
+
+            alert(data.message);
+
         } catch (error) {
             console.error('Registration failed:', error)
         } finally {

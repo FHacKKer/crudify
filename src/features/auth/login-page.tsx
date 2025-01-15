@@ -1,15 +1,16 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 
-import {Link} from 'react-router-dom'
-import { Eye, EyeOff, Loader2 } from 'lucide-react'
+import {Link, useNavigate} from 'react-router-dom'
+import {Eye, EyeOff, Loader2} from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {Button} from '@/components/ui/button'
+import {Input} from '@/components/ui/input'
+import {Label} from '@/components/ui/label'
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 import api from "@/services/api.ts";
+import {useAppContext} from "@/context/AppContex.tsx";
 
 interface FormData {
     login: string
@@ -19,7 +20,8 @@ interface FormData {
 type successResponse = {
     success: true;
     message: string;
-    token : string
+    token : string;
+    refreshToken:string
 }
 
 type errorResponse = {
@@ -30,6 +32,9 @@ type errorResponse = {
 type ServerResponse = successResponse | errorResponse
 
 export default function LoginPage() {
+
+    const navigate = useNavigate()
+
     const [isLoading, setIsLoading] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
     const [formData, setFormData] = useState<FormData>({
@@ -37,6 +42,14 @@ export default function LoginPage() {
         password: '',
     })
     const [errors, setErrors] = useState<Partial<FormData>>({})
+
+
+    const {setAccessToken, setIsLoggedIn, isLoggedIn, accessToken} = useAppContext()
+
+    if(isLoggedIn || accessToken){
+        navigate("/");
+        return
+    }
 
     const validateForm = (): boolean => {
         const newErrors: Partial<FormData> = {}
@@ -72,13 +85,13 @@ export default function LoginPage() {
                     password: formData.password,
                 },
             );
-
             const res:ServerResponse = req.data
-
             if(res.success) {
-                console.log(res.token)
-            }else{
-                console.log(res.message)
+                setAccessToken(res.token);
+                setIsLoggedIn(true)
+                localStorage.setItem("refreshToken", res.refreshToken);
+                navigate("/");
+                return
             }
 
         } catch (error) {
